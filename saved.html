@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarCompare | Saved Vehicles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-#0d1117 text-gray-100 font-sans pt-20" style="background-color: #0d1117;">
+
+    <nav class="fixed top-0 left-0 w-full z-50 bg-[#0d1117]/80 backdrop-blur-md border-b border-gray-800/50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="w-6 h-6 rounded-full border-2 border-4ade80 border-[#4ade80] flex items-center justify-center">
+                    <div class="w-2 h-2 bg-[#4ade80] rounded-full"></div>
+                </div>
+                <span class="text-white font-bold text-lg tracking-tight">CarCompare</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-400">
+                <a href="index.html" class="hover:text-[#4ade80] transition">Home</a>
+                <a href="browse-cars.html" class="hover:text-[#4ade80] transition">Browse Cars</a>
+                <a href="compare-cars.html" class="text-white hover:text-[#4ade80] transition">Compare Cars</a>
+                <a href="#" class="hover:text-[#4ade80] transition">Chat</a>
+            </div>
+            <button onclick="localStorage.removeItem('carCompare_currentUser'); window.location.href='login.html';" class="border border-[#4ade80] text-[#4ade80] px-5 py-1.5 rounded-md text-sm font-medium hover:bg-[#4ade80] hover:text-[#0d1117] transition">
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="border-b border-gray-800 pb-6 mb-8">
+            <h1 class="text-3xl font-bold text-white tracking-tight">Your Saved Garage</h1>
+            <p id="garageDesc" class="text-sm text-gray-400 mt-1">Curated list linked to your user profile parameters.</p>
+        </div>
+
+        <div id="savedGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+    </main>
+
+    <script src="inventory.js"></script>
+    <script>
+        const currentUser = localStorage.getItem('carCompare_currentUser');
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!currentUser) {
+                document.getElementById('savedGrid').innerHTML = `
+                    <div class="col-span-full text-center py-12 bg-[#161b22] border border-gray-800 rounded-2xl">
+                        <p class="text-gray-400 mb-4">Please log in to view your saved vehicle configurations.</p>
+                        <a href="login.html" class="bg-[#4ade80] text-[#0d1117] font-bold text-xs px-6 py-2.5 rounded-xl hover:opacity-90 transition">Go to Sign In</a>
+                    </div>`;
+                return;
+            }
+
+            document.getElementById('garageDesc').textContent = `Reviewing saved tracks for workspace account user: ${currentUser}`;
+            renderSavedGarage();
+        });
+
+        function renderSavedGarage() {
+            const container = document.getElementById('savedGrid');
+            const users = JSON.parse(localStorage.getItem('carCompare_users') || '{}');
+            const favKeys = (users[currentUser] && users[currentUser].favorites) ? users[currentUser].favorites : [];
+
+            if (favKeys.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-gray-500 text-sm">
+                        No saved configurations found. Go tap the heart icon on your favorite profiles in the showroom grid!
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            favKeys.forEach(key => {
+                const car = carInventory[key];
+                if (!car) return;
+
+                container.innerHTML += `
+                    <div class="bg-[#161b22] border border-gray-800 rounded-2xl overflow-hidden p-5 flex flex-col justify-between">
+                        <div>
+                            <img src="${car.image}" class="w-full h-40 object-cover rounded-xl mb-4">
+                            <h3 class="text-lg font-bold text-white">${car.name}</h3>
+                            <p class="text-xs text-gray-400 mt-2">${car.bhp} BHP • ${car.zero60}s to 60mph</p>
+                        </div>
+                        <button onclick="removeFav('${key}')" class="mt-4 w-full text-center text-xs text-red-400 hover:underline">Remove From Garage</button>
+                    </div>`;
+            });
+        }
+
+        function removeFav(key) {
+            const users = JSON.parse(localStorage.getItem('carCompare_users') || '{}');
+            users[currentUser].favorites = users[currentUser].favorites.filter(k => k !== key);
+            localStorage.setItem('carCompare_users', JSON.stringify(users));
+            renderSavedGarage();
+        }
+    </script>
+</body>
+</html>

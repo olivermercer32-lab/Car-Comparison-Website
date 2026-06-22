@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarCompare - Find the car that fits you</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            green: '#4ade80',    
+                            darkGreen: '#1e3a24',
+                            bgDark: '#0d1117',   
+                            cardBg: '#161b22',   
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-bgDark text-gray-100 font-sans overflow-x-hidden">
+
+    <nav class="fixed w-full z-50 bg-brand-bgDark/80 backdrop-blur-md border-b border-gray-800/50 px-6 py-4 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="w-6 h-6 rounded-full border-2 border-brand-green flex items-center justify-center">
+                    <div class="w-2 h-2 bg-brand-green rounded-full"></div>
+                </div>
+                <span class="text-white font-bold text-lg tracking-tight">CarCompare</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-400">
+                <a href="compare-cars.html" class="hover:text-brand-green transition">Compare</a>
+                <a href="browse-cars.html" class="hover:text-brand-green transition">Browse Cars</a>
+                <a href="saved.html" class="hover:text-brand-green transition">Saved Cars</a>
+                <a href="#" id="nav-chat-link" class="text-white hover:text-brand-green transition">Chat</a>
+                <a href="about.html" class="hover:text-brand-green transition">About</a>
+                <a href="settings.html" class="hover:text-brand-green transition">Settings</a>
+                <a href="subscription.html" class="hover:text-brand-green transition">Membership</a>
+            </div>
+
+            <div id="nav-auth-container">
+                <button class="border border-brand-green text-brand-green px-5 py-1.5 rounded-md text-sm font-medium hover:bg-brand-green hover:text-brand-bgDark transition duration-300" onclick="window.location.href='login.html'">
+                    Login
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative h-screen w-full overflow-hidden flex items-center">
+        <div id="parallax-bg" class="absolute inset-0 w-full h-[120%] bg-cover bg-center z-0 pointer-events-none transition-transform duration-75 ease-out parallax-bg-img"></div>
+
+        <div id="parallax-car" class="absolute bottom-0 right-0 w-full md:w-[60%] h-[60%] md:h-[80%] bg-contain bg-bottom bg-no-repeat z-10 pointer-events-none transition-transform duration-75 ease-out parallax-car-img"></div>
+
+        <div class="relative max-w-7xl mx-auto px-6 w-full z-20 grid md:grid-cols-2 items-center pt-16">
+            <div class="max-w-xl space-y-6">
+                <div class="absolute left-2 top-1/4 hidden lg:flex flex-col items-center space-y-4">
+                    <div class="w-1.5 h-1.5 bg-brand-green rounded-full shadow-[0_0_8px_#4ade80]"></div>
+                    <div class="w-1.5 h-32 bg-gray-800 rounded-full flex items-start">
+                        <div class="w-full h-8 bg-brand-green/40 rounded-full"></div>
+                    </div>
+                </div>
+
+                <h1 class="text-5xl md:text-6xl font-bold text-white tracking-tight leading-[1.1]">
+                    Find the car <br>that fits you.
+                </h1>
+                <p class="text-gray-400 text-lg md:text-xl font-light leading-relaxed">
+                    Compare specs, performance, reliability and more – side by side.
+                </p>
+                <div class="pt-2">
+                    <button onclick="window.location.href='browse-cars.html'" class="bg-brand-green text-black font-semibold px-8 py-4 rounded-xl flex items-center space-x-3 hover:bg-green-400 transform hover:-translate-y-0.5 transition duration-200 shadow-lg shadow-brand-green/20">
+                        <span>Discover More</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-30 max-w-7xl mx-auto px-6 py-24 space-y-32">
+        <section class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-brand-green">Quick Selection</h2>
+                    <p class="text-3xl font-bold text-white mt-1">Explore by Body Style</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="window.location.href='browse-cars.html'" class="px-4 py-2 rounded-lg bg-brand-cardBg border border-gray-800 text-sm hover:border-gray-700 transition">View All</button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div onclick="window.location.href='browse-cars.html'" class="bg-brand-cardBg border border-gray-800 p-6 rounded-2xl hover:border-brand-green/40 transition group cursor-pointer text-center">
+                    <div class="text-gray-400 group-hover:text-brand-green transition mb-3 text-3xl">🏎️</div>
+                    <h3 class="font-semibold text-white">Supercars</h3>
+                    <p class="text-xs text-gray-500 mt-1">High Performance</p>
+                </div>
+                <div onclick="window.location.href='browse-cars.html'" class="bg-brand-cardBg border border-gray-800 p-6 rounded-2xl hover:border-brand-green/40 transition group cursor-pointer text-center">
+                    <div class="text-gray-400 group-hover:text-brand-green transition mb-3 text-3xl">🔌</div>
+                    <h3 class="font-semibold text-white">Electric</h3>
+                    <p class="text-xs text-gray-500 mt-1">Eco & Tech-Forward</p>
+                </div>
+                <div onclick="window.location.href='browse-cars.html'" class="bg-brand-cardBg border border-gray-800 p-6 rounded-2xl hover:border-brand-green/40 transition group cursor-pointer text-center">
+                    <div class="text-gray-400 group-hover:text-brand-green transition mb-3 text-3xl">🚙</div>
+                    <h3 class="font-semibold text-white">SUVs</h3>
+                    <p class="text-xs text-gray-500 mt-1">Space & Comfort</p>
+                </div>
+                <div onclick="window.location.href='browse-cars.html'" class="bg-brand-cardBg border border-gray-800 p-6 rounded-2xl hover:border-brand-green/40 transition group cursor-pointer text-center">
+                    <div class="text-gray-400 group-hover:text-brand-green transition mb-3 text-3xl">⚡</div>
+                    <h3 class="font-semibold text-white">Hybrids</h3>
+                    <p class="text-xs text-gray-500 mt-1">Best of Both Worlds</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid md:grid-cols-2 gap-12 items-center bg-brand-cardBg border border-gray-800/80 p-8 md:p-12 rounded-3xl">
+            <div class="space-y-6">
+                <span class="bg-brand-green/10 text-brand-green text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Side-by-Side</span>
+                <h2 class="text-4xl font-bold text-white tracking-tight">Compare specs dynamically.</h2>
+                <p class="text-gray-400 leading-relaxed">
+                    Stack up engine configurations, horsepower, real-world range, depreciation rates, and maintenance scoring modules in an easy-to-read direct layout matrix.
+                </p>
+                <div class="flex flex-wrap gap-3 pt-2">
+                    <span class="bg-brand-bgDark border border-gray-800 px-4 py-2 rounded-xl text-xs text-gray-300">📊 Engine Spec Sheets</span>
+                    <span class="bg-brand-bgDark border border-gray-800 px-4 py-2 rounded-xl text-xs text-gray-300">📉 Reliability Metrics</span>
+                    <span class="bg-brand-bgDark border border-gray-800 px-4 py-2 rounded-xl text-xs text-gray-300">💰 TCO Valuation</span>
+                </div>
+            </div>
+            
+            <div class="space-y-4 bg-brand-bgDark p-6 rounded-2xl border border-gray-800">
+                <div class="flex justify-between items-center pb-4 border-b border-gray-800 text-sm">
+                    <span class="text-gray-500">Metric Matrix</span>
+                    <span class="text-brand-green font-medium">2 Vehicles Selected</span>
+                </div>
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">0-60 mph acceleration</span></div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-brand-cardBg p-2 rounded text-xs border border-brand-green/30 text-white">Car A: <span class="text-brand-green font-bold">3.1s</span></div>
+                            <div class="bg-brand-cardBg p-2 rounded text-xs border border-gray-800 text-gray-400">Car B: 3.8s</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Safety Rating Coefficient</span></div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-brand-cardBg p-2 rounded text-xs border border-gray-800 text-gray-400">Car A: 92%</div>
+                            <div class="bg-brand-cardBg p-2 rounded text-xs border border-brand-green/30 text-white">Car B: <span class="text-brand-green font-bold">96%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="fixed bottom-6 right-6 z-50">
+        <button id="ai-chat-btn" class="bg-[#161b22]/90 backdrop-blur-md border border-gray-800 hover:border-brand-green/50 text-white px-5 py-3 rounded-2xl flex items-center space-x-3 shadow-2xl transition duration-300 group">
+            <div class="w-10 h-10 rounded-xl bg-brand-green/10 group-hover:bg-brand-green/20 flex items-center justify-center transition">
+                <svg class="w-5 h-5 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                </svg>
+            </div>
+            <div class="text-left">
+                <p class="text-xs font-semibold text-white tracking-wide">Chat with AI</p>
+                <p class="text-[11px] text-gray-400">Find your perfect car</p>
+            </div>
+        </button>
+
+        <div id="chat-box" class="hidden absolute bottom-20 right-0 w-80 md:w-96 h-[500px] bg-brand-cardBg border border-gray-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            <div class="p-4 bg-brand-bgDark border-b border-gray-800 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-brand-green rounded-full animate-pulse"></div>
+                    <span class="text-sm font-semibold text-white">CarCompare Genius AI</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button id="reset-chat" class="text-xs text-gray-500 hover:text-brand-green transition" title="Reset Chat">🔄</button>
+                    <button id="close-chat" class="text-gray-400 hover:text-white text-xs ml-1">✕</button>
+                </div>
+            </div>
+            
+            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4 text-xs text-gray-300 scrollbar">
+                <div class="bg-brand-bgDark p-3 rounded-xl border border-gray-800 max-w-[85%]">
+                    Hello! I'm your virtual garage consultant. Let's find your perfect match. To get started, <strong>what is your maximum budget configuration?</strong>
+                </div>
+                <div id="chat-options" class="flex flex-col gap-2 pt-1 max-w-[85%]">
+                    <button onclick="handleOptionSelect(40000, 'Under $40,000')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 hover:text-white font-medium">Under $40,000</button>
+                    <button onclick="handleOptionSelect(90000, 'Under $90,000')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 hover:text-white font-medium">Under $90,000</button>
+                    <button onclick="handleOptionSelect(250000, 'Sky\'s the Limit ($90k+)')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 hover:text-white font-medium">Sky's the Limit ($90k+)</button>
+                </div>
+            </div>
+            
+            <div class="p-3 border-t border-gray-800 bg-brand-bgDark flex items-center space-x-2">
+                <input id="chat-input" type="text" placeholder="Select options above to chat..." disabled class="bg-brand-cardBg border border-gray-800 rounded-xl px-3 py-2 text-xs flex-1 text-gray-500 cursor-not-allowed outline-none">
+                <button disabled class="bg-gray-800 text-gray-500 px-3 py-2 rounded-xl text-xs font-bold cursor-not-allowed">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-t border-gray-900 bg-brand-bgDark z-40 relative">
+        <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="w-5 h-5 rounded-full border-2 border-brand-green flex items-center justify-center">
+                    <div class="w-1.5 h-1.5 bg-brand-green rounded-full"></div>
+                </div>
+                <span class="text-white text-sm font-semibold tracking-tight">CarCompare © 2026</span>
+            </div>
+            <div class="flex space-x-6 text-xs text-gray-500">
+                <a href="#" class="hover:text-brand-green transition">Privacy Policy</a>
+                <a href="#" class="hover:text-brand-green transition">Terms of Service</a>
+                <a href="#" class="hover:text-brand-green transition">Contact Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        if (typeof carInventory === 'undefined') {
+            var carInventory = {
+                "tesla-model3": { name: "Tesla Model 3 Long Range", price: 38990, bhp: 394, torque: 493, zero60: 4.2, topSpeedLimited: 125, topSpeedUnlimited: 125, quarterLap: 12.4, zero100: 10.5, reliability: 4, maintenance: 4.5, modifiability: 2, image: "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=600&q=80", tags: ["Electric", "Sedan"] },
+                "audi-q4e": { name: "Audi Q4 e-tron Sportback", price: 49800, bhp: 295, torque: 460, zero60: 5.8, topSpeedLimited: 112, topSpeedUnlimited: 112, quarterLap: 14.3, zero100: 15.2, reliability: 4.5, maintenance: 3.5, modifiability: 2.5, image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=600&q=80", tags: ["Electric", "SUVs"] },
+                "bmw-m4": { name: "BMW M4 Competition Coupe", price: 79100, bhp: 503, torque: 650, zero60: 3.4, topSpeedLimited: 155, topSpeedUnlimited: 180, quarterLap: 11.4, zero100: 8.0, reliability: 3.5, maintenance: 2.5, modifiability: 4.5, image: "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&w=600&q=80", tags: ["Hybrids", "Supercars"] },
+                "porsche-taycan": { name: "Porsche Taycan Turbo S", price: 194900, bhp: 750, torque: 1050, zero60: 2.6, topSpeedLimited: 161, topSpeedUnlimited: 161, quarterLap: 10.5, zero100: 6.1, reliability: 4, maintenance: 2, modifiability: 1.5, image: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=600&q=80", tags: ["Electric", "Supercars"] },
+                "ferrari-296gtb": { name: "Ferrari 296 GTB", price: 322000, bhp: 819, torque: 740, zero60: 2.7, topSpeedLimited: 205, topSpeedUnlimited: 205, quarterLap: 10.1, zero100: 5.3, reliability: 3, maintenance: 1.5, modifiability: 3, image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=600&q=80", tags: ["Hybrids", "Supercars"] }
+            };
+        }
+    </script>
+    <script src="inventory.js"></script>
+
+    <script>
+        function checkAuthUI() {
+            const currentUser = localStorage.getItem('carCompare_currentUser');
+            const authContainer = document.getElementById('nav-auth-container');
+            
+            if (currentUser && authContainer) {
+                authContainer.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <span class="text-xs text-gray-400 hidden lg:inline">Welcome, <strong class="text-brand-green">${currentUser}</strong></span>
+                        <button onclick="handleLogOut()" class="border border-red-500/30 text-red-400 px-4 py-1.5 rounded-md text-sm font-medium hover:bg-red-500 hover:text-white transition duration-300">
+                            Logout
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function handleLogOut() {
+            localStorage.removeItem('carCompare_currentUser');
+            window.location.reload(); 
+        }
+
+        window.addEventListener('DOMContentLoaded', checkAuthUI);
+
+        window.addEventListener('scroll', () => {
+            const scrollValue = window.scrollY;
+            const bgLayer = document.getElementById('parallax-bg');
+            const carLayer = document.getElementById('parallax-car');
+            if(bgLayer && carLayer) {
+                bgLayer.style.transform = `translateY(${scrollValue * 0.4}px)`;
+                carLayer.style.transform = `translateY(${scrollValue * 0.15}px)`;
+            }
+        });
+
+        const chatBtn = document.getElementById('ai-chat-btn');
+        const chatBox = document.getElementById('chat-box');
+        const closeChat = document.getElementById('close-chat');
+        const resetChatBtn = document.getElementById('reset-chat');
+        const msgContainer = document.getElementById('chat-messages');
+        const optionsContainer = document.getElementById('chat-options');
+        const navChatLink = document.getElementById('nav-chat-link');
+
+        const toggleChatWindow = () => chatBox.classList.toggle('hidden');
+        
+        chatBtn.addEventListener('click', toggleChatWindow);
+        if(navChatLink) {
+            navChatLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                chatBox.classList.remove('hidden');
+                chatBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        }
+        
+        closeChat.addEventListener('click', (e) => { e.stopPropagation(); chatBox.classList.add('hidden'); });
+        resetChatBtn.addEventListener('click', () => resetChatWizard());
+
+        let wizardStep = 1;
+        let userChoices = { maxBudget: Infinity, lifestyle: '', priority: '' };
+
+        function handleOptionSelect(val, textLabel) {
+            appendUserMessage(textLabel);
+            if (wizardStep === 1) {
+                userChoices.maxBudget = val;
+                wizardStep = 2;
+                setTimeout(() => promptLifestyleQuestion(), 400);
+            } else if (wizardStep === 2) {
+                userChoices.lifestyle = val;
+                wizardStep = 3;
+                setTimeout(() => promptPriorityQuestion(), 400);
+            } else if (wizardStep === 3) {
+                userChoices.priority = val;
+                wizardStep = 4;
+                setTimeout(() => processAndRenderMatches(), 400);
+            }
+        }
+
+        function appendUserMessage(text) {
+            optionsContainer.innerHTML = '';
+            const msg = document.createElement('div');
+            msg.className = "bg-brand-green/10 border border-brand-green/30 p-3 rounded-xl max-w-[85%] self-end ml-auto text-right text-white";
+            msg.textContent = text;
+            msgContainer.appendChild(msg);
+            scrollMessagesToBottom();
+        }
+
+        function appendAiMessage(htmlContent) {
+            const msg = document.createElement('div');
+            msg.className = "bg-brand-bgDark p-3 rounded-xl border border-gray-800 max-w-[85%]";
+            msg.innerHTML = htmlContent;
+            msgContainer.appendChild(msg);
+            scrollMessagesToBottom();
+        }
+
+        function scrollMessagesToBottom() { msgContainer.scrollTop = msgContainer.scrollHeight; }
+
+        function promptLifestyleQuestion() {
+            appendAiMessage("Understood. Budget limits configured into the lookup filters. Next question: <strong>What main purpose will this car serve?</strong>");
+            optionsContainer.innerHTML = `
+                <button onclick="handleOptionSelect('Daily Commute', 'Daily Commuting / Eco')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 font-medium">Daily Commuting / Eco</button>
+                <button onclick="handleOptionSelect('Family Space', 'Family Trips & Comfort')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 font-medium">Family Trips & Comfort</button>
+                <button onclick="handleOptionSelect('Track Acceleration', 'High-Performance track tuning')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 font-medium">High-Performance Track Tuning</button>
+            `;
+        }
+
+        function promptPriorityQuestion() {
+            appendAiMessage("Perfect. Lastly, <strong>what parameter value matters most to you?</strong>");
+            optionsContainer.innerHTML = `
+                <button onclick="handleOptionSelect('efficiency', 'Maximum Fuel Efficiency / EV Range')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 font-medium">Maximum EV Range / Fuel Saving</button>
+                <button onclick="handleOptionSelect('speed', 'Raw Acceleration (0-60mph)')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 font-medium">Raw Acceleration (0-60mph)</button>
+                <button onclick="handleOptionSelect('reliability', 'Build Reliability & Maintainability')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 font-medium">Build Reliability & Maintainability</button>
+            `;
+        }
+
+        function processAndRenderMatches() {
+            appendAiMessage("⚙️ Processing target parameters against database logs... Generating matches...");
+            setTimeout(() => {
+                let matches = [];
+                for (let key in carInventory) {
+                    let car = carInventory[key];
+                    if (car.price > userChoices.maxBudget) continue;
+                    let score = 0;
+                    if (userChoices.lifestyle === 'Daily Commute' && car.tags.includes('Electric')) score += 3;
+                    if (userChoices.lifestyle === 'Family Space' && car.tags.includes('SUVs')) score += 3;
+                    if (userChoices.lifestyle === 'Track Acceleration' && car.tags.includes('Supercars')) score += 3;
+                    if (userChoices.priority === 'speed') {
+                        if (car.zero60 <= 3.0) score += 5;
+                        else if (car.zero60 <= 4.5) score += 3;
+                    }
+                    if (userChoices.priority === 'reliability') score += (car.reliability * 1.5);
+                    if (userChoices.priority === 'efficiency') {
+                        if (car.tags.includes('Electric') || car.tags.includes('Hybrids')) score += 4;
+                    }
+                    matches.push({ key: key, car: car, finalScore: score });
+                }
+                matches.sort((a, b) => b.finalScore - a.finalScore);
+                let topMatches = matches.slice(0, 2);
+
+                if (topMatches.length === 0) {
+                    appendAiMessage("⚠️ No configurations perfectly matched your criteria under that price block. Try running a reset with higher valuation bounds!");
+                    return;
+                }
+
+                appendAiMessage(`🎉 Complete! Here are the best custom recommendations based on your preferences:`);
+                topMatches.forEach(item => {
+                    const vehicleCardHTML = `
+                        <div class="mt-3 bg-brand-bgDark border border-gray-800 rounded-xl overflow-hidden shadow-inner group">
+                            <img src="${item.car.image}" class="w-full h-28 object-cover">
+                            <div class="p-3 space-y-1">
+                                <h4 class="font-bold text-white text-xs">${item.car.name}</h4>
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="text-brand-green font-semibold">$${item.car.price.toLocaleString()}</span>
+                                    <span class="text-gray-400">${item.car.bhp} BHP • ${item.car.zero60}s (0-60)</span>
+                                </div>
+                                <button onclick="window.location.href='browse-cars.html'" class="w-full mt-2 bg-brand-green text-black font-bold py-1.5 rounded-lg text-[10px] hover:opacity-90 transition block text-center">
+                                    View Full Matrix Profile
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    appendAiMessage(vehicleCardHTML);
+                });
+
+                optionsContainer.innerHTML = `
+                    <button onclick="resetChatWizard()" class="w-full text-center bg-brand-green/10 border border-brand-green/30 hover:bg-brand-green text-brand-green hover:text-black py-2 rounded-xl transition text-xs font-bold">
+                        Start Search Over 🔄
+                    </button>
+                `;
+            }, 1000);
+        }
+
+        function resetChatWizard() {
+            wizardStep = 1;
+            userChoices = { maxBudget: Infinity, lifestyle: '', priority: '' };
+            msgContainer.innerHTML = `
+                <div class="bg-brand-bgDark p-3 rounded-xl border border-gray-800 max-w-[85%]">
+                    Hello! I'm your virtual garage consultant. Let's find your perfect match. To get started, <strong>what is your maximum budget configuration?</strong>
+                </div>
+            `;
+            optionsContainer.innerHTML = `
+                <button onclick="handleOptionSelect(40000, 'Under $40,000')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 hover:text-white font-medium">Under $40,000</button>
+                <button onclick="handleOptionSelect(90000, 'Under $90,000')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 hover:text-white font-medium">Under $90,000</button>
+                <button onclick="handleOptionSelect(250000, 'Sky\'s the Limit ($90k+)')" class="w-full text-left bg-brand-bgDark hover:bg-brand-green/10 border border-gray-800 hover:border-brand-green/40 p-2.5 rounded-xl transition text-gray-300 hover:text-white font-medium">Sky's the Limit ($90k+)</button>
+            `;
+        }
+    </script>
+</body>
+</html>

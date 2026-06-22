@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Compare | Settings</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: rgba(13, 17, 23, 0.9);
+            --text-main: #fff;
+            --text-muted: #6a6f8c;
+            --label-color: #aaa;
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-focus-bg: rgba(255, 255, 255, 0.1);
+            --border-color: rgba(255, 255, 255, 0.05);
+            --accent-color: #4ade80;
+            --btn-text: #0d1117;
+            --tab-inactive: #4f5666;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --label-color: #6b7280;
+            --input-bg: rgba(0, 0, 0, 0.05);
+            --input-focus-bg: rgba(0, 0, 0, 0.08);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --accent-color: #16a34a; 
+            --btn-text: #fff;
+            --tab-inactive: #9ca3af;
+        }
+
+        body {
+            margin: 0;
+            color: var(--text-muted);
+            background: var(--bg-color);
+            font: 600 16px/18px 'Open Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            transition: background 0.3s ease;
+        }
+        *, :after, :before { box-sizing: border-box; }
+        a { color: inherit; text-decoration: none; }
+
+        .settings-wrap {
+            width: 100%;
+            margin: auto;
+            max-width: 525px;
+            min-height: 670px;
+            position: relative;
+            background: url(https://raw.githubusercontent.com/khadkamhn/day-01-login-form/master/img/bg.jpg) no-repeat center;
+            box-shadow: 0 12px 15px 0 rgba(0,0,0,.24), 0 17px 50px 0 rgba(0,0,0,.19);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .settings-html {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            padding: 60px 70px 50px 70px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .settings-html .security-htm,
+        .settings-html .preferences-htm {
+            top: 0; left: 0; right: 0; bottom: 0;
+            position: absolute;
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+            transition: all .4s linear;
+        }
+        .settings-html .tab-security,
+        .settings-html .tab-preferences,
+        .settings-form .group .radio-theme {
+            display: none;
+        }
+        .settings-html .tab,
+        .settings-form .group .label,
+        .settings-form .group .button {
+            text-transform: uppercase;
+        }
+        .settings-html .tab {
+            font-size: 22px;
+            margin-right: 15px;
+            padding-bottom: 5px;
+            margin: 0 15px 25px 0;
+            display: inline-block;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            color: var(--tab-inactive);
+        }
+        .settings-html .tab-security:checked + .tab,
+        .settings-html .tab-preferences:checked + .tab {
+            color: var(--text-main);
+            border-color: var(--accent-color);
+        }
+        .settings-form {
+            min-height: 345px;
+            position: relative;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        .settings-form .group {
+            margin-bottom: 20px;
+        }
+        .settings-form .group .label,
+        .settings-form .group .input,
+        .settings-form .group .button {
+            width: 100%;
+            color: var(--text-main);
+            display: block;
+        }
+        .settings-form .group .input,
+        .settings-form .group .button {
+            border: none;
+            padding: 15px 20px;
+            border-radius: 25px;
+            background: var(--input-bg);
+            outline: none;
+            font-weight: 600;
+        }
+        .settings-form .group .input:focus {
+            background: var(--input-focus-bg);
+            box-shadow: 0 0 0 1px var(--accent-color);
+        }
+        .settings-form .group input[data-type="password"] {
+            -webkit-text-security: circle;
+        }
+        .settings-form .group .label {
+            color: var(--label-color);
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        .settings-form .group .button {
+            background: var(--accent-color);
+            color: var(--btn-text);
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 25px;
+        }
+        .settings-form .group .button:hover {
+            opacity: 0.9;
+        }
+        
+        .theme-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .theme-label {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: var(--input-bg);
+            border-radius: 25px;
+            cursor: pointer;
+            color: var(--text-main);
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .settings-form .group .radio-theme:checked + .theme-label {
+            border-color: var(--accent-color);
+            background: var(--input-focus-bg);
+            box-shadow: 0 0 0 1px var(--accent-color);
+        }
+
+        .settings-html .tab-security:checked + .tab + .tab-preferences + .tab + .settings-form .security-htm {
+            transform: rotate(0);
+        }
+        .settings-html .tab-preferences:checked + .tab + .settings-form .preferences-htm {
+            transform: rotate(0);
+        }
+
+        .hr {
+            height: 2px;
+            margin: 30px 0 20px 0;
+            background: var(--border-color);
+        }
+        .foot-lnk {
+            text-align: center;
+            font-size: 14px;
+        }
+        .alert-message {
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .alert-message.error { color: #fc8181; }
+        .alert-message.success { color: #4ade80; }
+    </style>
+</head>
+<body>
+    <div class="settings-wrap">
+        <div class="settings-html">
+            <input id="tab-1" type="radio" name="tab" class="tab-security" checked>
+            <label for="tab-1" class="tab">Security</label>
+            <input id="tab-2" type="radio" name="tab" class="tab-preferences">
+            <label for="tab-2" class="tab">Preferences</label>
+            
+            <div class="settings-form">
+                <form id="passwordForm" class="security-htm" onsubmit="handleChangePassword(event)">
+                    <div id="passwordStatus" class="alert-message"></div>
+                    
+                    <div class="group">
+                        <label for="current-pass" class="label">Current Password</label>
+                        <input id="current-pass" type="password" class="input" data-type="password" required>
+                    </div>
+                    <div class="group">
+                        <label for="new-pass" class="label">New Password</label>
+                        <input id="new-pass" type="password" class="input" data-type="password" required>
+                    </div>
+                    <div class="group">
+                        <label for="repeat-pass" class="label">Repeat New Password</label>
+                        <input id="repeat-pass" type="password" class="input" data-type="password" required>
+                    </div>
+                    <div class="group">
+                        <input type="submit" class="button" value="Update Password">
+                    </div>
+                    <div class="hr"></div>
+                    <div class="foot-lnk">
+                        <a href="index.html">← Back to Home</a>
+                    </div>
+                </form>
+
+                <div class="preferences-htm">
+                    <div class="group">
+                        <label class="label">Display Theme</label>
+                        <div class="theme-options">
+                            <input type="radio" id="theme-dark" name="theme-selection" class="radio-theme" value="dark" checked onchange="setTheme(this.value)">
+                            <label for="theme-dark" class="theme-label">Dark Mode</label>
+
+                            <input type="radio" id="theme-light" name="theme-selection" class="radio-theme" value="light" onchange="setTheme(this.value)">
+                            <label for="theme-light" class="theme-label">Light Mode</label>
+                        </div>
+                    </div>
+                    
+                    <div class="hr" style="margin-top: 150px;"></div>
+                    <div class="foot-lnk">
+                        <a href="index.html">← Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const currentUser = localStorage.getItem('carCompare_currentUser');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!currentUser) {
+                alert("Please log in to access settings.");
+                window.location.href = 'login.html'; 
+                return;
+            }
+            
+            const savedTheme = localStorage.getItem('carCompare_theme') || 'dark';
+            setTheme(savedTheme);
+            
+            if (savedTheme === 'light') {
+                document.getElementById('theme-light').checked = true;
+            } else {
+                document.getElementById('theme-dark').checked = true;
+            }
+        });
+
+        function setTheme(theme) {
+            if (theme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+            localStorage.setItem('carCompare_theme', theme);
+        }
+
+        function handleChangePassword(e) {
+            e.preventDefault();
+            
+            const currentPass = document.getElementById('current-pass').value;
+            const newPass = document.getElementById('new-pass').value;
+            const repeatPass = document.getElementById('repeat-pass').value;
+            const statusDiv = document.getElementById('passwordStatus');
+            
+            statusDiv.className = "alert-message";
+            statusDiv.textContent = "";
+
+            const accounts = JSON.parse(localStorage.getItem('carCompare_users') || '{}');
+            
+            if (!accounts[currentUser]) {
+                statusDiv.classList.add('error');
+                statusDiv.textContent = "Error: User profile trace mismatch.";
+                return;
+            }
+            if (accounts[currentUser].password !== currentPass) {
+                statusDiv.classList.add('error');
+                statusDiv.textContent = "Error: Current password is incorrect.";
+                return;
+            }
+            if (newPass !== repeatPass) {
+                statusDiv.classList.add('error');
+                statusDiv.textContent = "Error: New passwords configurations do not match.";
+                return;
+            }
+            if (newPass === currentPass) {
+                statusDiv.classList.add('error');
+                statusDiv.textContent = "New password must be different from current password.";
+                return;
+            }
+
+            accounts[currentUser].password = newPass;
+            localStorage.setItem('carCompare_users', JSON.stringify(accounts));
+            
+            statusDiv.classList.add('success');
+            statusDiv.textContent = "Password updated successfully!";
+            
+            document.getElementById('passwordForm').reset();
+        }
+    </script>
+</body>
+</html>

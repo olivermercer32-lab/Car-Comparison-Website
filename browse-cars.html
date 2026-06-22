@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarCompare | Browse Cars</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #21262d; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #30363d; }
+        html { scroll-behavior: smooth; }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            green: '#4ade80',    
+                            darkGreen: '#1e3a24',
+                            bgDark: '#0d1117',   
+                            cardBg: '#161b22',   
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-bgDark text-gray-100 font-sans overflow-x-hidden pt-20">
+
+    <nav class="fixed top-0 left-0 w-full z-50 bg-brand-bgDark/80 backdrop-blur-md border-b border-gray-800/50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="w-6 h-6 rounded-full border-2 border-brand-green flex items-center justify-center">
+                    <div class="w-2 h-2 bg-brand-green rounded-full"></div>
+                </div>
+                <span class="text-white font-bold text-lg tracking-tight">CarCompare</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-400">
+                <a href="index.html" class="hover:text-brand-green transition">Home</a>
+                <a href="compare-cars.html" class="text-white hover:text-brand-green transition">Compare Cars</a>
+                <a href="saved.html" class="hover:text-brand-green transition">Saved Cars</a>
+                <a href="#" class="hover:text-brand-green transition">Chat</a>
+                <a href="#" class="hover:text-brand-green transition">About</a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <span id="userGreeting" class="text-xs text-gray-400 font-medium hidden"></span>
+                <button id="authBtn" class="border border-brand-green text-brand-green px-5 py-1.5 rounded-md text-sm font-medium hover:bg-brand-green hover:text-brand-bgDark transition duration-300" onclick="handleAuthAction()">
+                    Login
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-800 pb-6 mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-white tracking-tight">Browse Vehicles</h1>
+                <p class="text-sm text-gray-400 mt-1">Discover and filter through pristine configurations.</p>
+            </div>
+            
+            <div class="flex items-center space-x-3 self-end md:self-auto">
+                <label for="sort" class="text-xs text-gray-400 font-medium uppercase tracking-wider">Sort By:</label>
+                <select id="sort" onchange="renderShowroom()" class="bg-brand-cardBg border border-gray-800 text-gray-200 text-xs rounded-xl px-4 py-2.5 outline-none focus:border-brand-green/60 transition cursor-pointer">
+                    <option value="newest">Year: Newest First</option>
+                    <option value="oldest">Year: Oldest First</option>
+                    <option value="az">Alphabetical: A-Z</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            
+            <aside class="space-y-6 lg:col-span-1">
+                <div class="bg-brand-cardBg border border-gray-800 rounded-2xl p-5 sticky top-24 space-y-6">
+                    <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                        <span class="text-sm font-semibold text-white flex items-center gap-2">
+                            <svg class="w-4 h-4 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                            Filter Matrix
+                        </span>
+                        <button onclick="clearFilters()" class="text-xs text-gray-500 hover:text-brand-green transition">Clear All</button>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block">Make</label>
+                        <select id="filterMake" class="w-full bg-brand-bgDark border border-gray-800 text-xs rounded-xl px-3 py-2.5 outline-none text-gray-300 focus:border-brand-green/50">
+                            <option value="All">All Makes</option>
+                            <option value="Tesla">Tesla</option>
+                            <option value="Porsche">Porsche</option>
+                            <option value="Audi">Audi</option>
+                            <option value="BMW">BMW</option>
+                            <option value="Mercedes-AMG">Mercedes-AMG</option>
+                            <option value="Nissan">Nissan</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block">Classification Tag</label>
+                        <div class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                            <label class="flex items-center justify-between text-xs text-gray-300 cursor-pointer group">
+                                <span class="flex items-center gap-2"><input type="checkbox" value="Sports Cars" class="filterTag accent-brand-green rounded"> Sports Cars[cite: 1]</span>
+                            </label>
+                            <label class="flex items-center justify-between text-xs text-gray-300 cursor-pointer group">
+                                <span class="flex items-center gap-2"><input type="checkbox" value="Electric" class="filterTag accent-brand-green rounded"> Electric</span>
+                            </label>
+                            <label class="flex items-center justify-between text-xs text-gray-300 cursor-pointer group">
+                                <span class="flex items-center gap-2"><input type="checkbox" value="Wagons" class="filterTag accent-brand-green rounded"> Wagons</span>
+                            </label>
+                            <label class="flex items-center justify-between text-xs text-gray-300 cursor-pointer group">
+                                <span class="flex items-center gap-2"><input type="checkbox" value="Hybrids" class="filterTag accent-brand-green rounded"> Hybrids</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block">Powertrain Drive</label>
+                        <select id="filterDrive" class="w-full bg-brand-bgDark border border-gray-800 text-xs rounded-xl px-3 py-2.5 outline-none text-gray-300 focus:border-brand-green/50">
+                            <option value="All">Any Layout</option>
+                            <option value="xDrive">xDrive / M xDrive</option>
+                            <option value="Quattro">Quattro</option>
+                            <option value="RWD">Rear-Wheel Drive (RWD)</option>
+                            <option value="4MATIC+">4MATIC+</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Model Year Range</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" id="filterMinYear" placeholder="Min (1980)" class="w-full bg-brand-bgDark border border-gray-800 text-xs rounded-xl p-2 text-center text-white outline-none focus:border-brand-green/40">
+                            <input type="number" id="filterMaxYear" placeholder="Max (2026)" class="w-full bg-brand-bgDark border border-gray-800 text-xs rounded-xl p-2 text-center text-white outline-none focus:border-brand-green/40">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block">Transmission Default</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="btnAuto" onclick="setTransmissionFilter('Automatic')" class="filterTransmission py-2 rounded-xl text-xs font-medium border border-gray-800 text-gray-400 hover:border-gray-700 transition">Automatic</button>
+                            <button id="btnManual" onclick="setTransmissionFilter('Manual')" class="filterTransmission py-2 rounded-xl text-xs font-medium border border-gray-800 text-gray-400 hover:border-gray-700 transition">Manual</button>
+                        </div>
+                    </div>
+
+                    <button onclick="renderShowroom()" class="w-full bg-brand-green text-black font-semibold py-3 rounded-xl text-xs tracking-wide hover:bg-green-400 transition duration-200">
+                        Apply System Filters
+                    </button>
+                </div>
+            </aside>
+
+            <section class="lg:col-span-3 space-y-6">
+                
+                <div class="text-xs text-gray-400 font-medium">
+                    Showing <span id="vehicleCount" class="text-white">0</span> curated matching profiles based on current parameters
+                </div>
+
+                <div id="showroomGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+
+            </section>
+        </div>
+    </main>
+
+    <div id="detailsModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-brand-cardBg border border-gray-800 w-full max-w-2xl rounded-2xl overflow-hidden max-h-[90vh] flex flex-col shadow-2xl scale-95 transition-all duration-300">
+            
+            <div class="relative h-56 w-full bg-gray-900">
+                <img id="modalImg" src="" alt="" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-cardBg to-transparent"></div>
+                <button onclick="closeModal()" class="absolute top-4 right-4 bg-black/60 text-gray-400 hover:text-white w-8 h-8 rounded-full flex items-center justify-center border border-gray-700/50 transition">✕</button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6 flex-1">
+                <div>
+                    <h2 id="modalName" class="text-2xl font-bold text-white tracking-tight"></h2>
+                    <p id="modalTagline" class="text-xs text-gray-400 mt-1 italic">High-Performance Profile Data Matrix</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 border-t border-gray-800 pt-4">
+                    <div class="bg-brand-bgDark/40 p-3 rounded-xl border border-gray-800/50">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">BHP Output</span>
+                        <span id="modalBhp" class="text-base font-semibold text-white"></span>
+                    </div>
+                    <div class="bg-brand-bgDark/40 p-3 rounded-xl border border-gray-800/50">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">Torque Curve</span>
+                        <span id="modalTorque" class="text-base font-semibold text-white"></span>
+                    </div>
+                    <div class="bg-brand-bgDark/40 p-3 rounded-xl border border-gray-800/50 col-span-2">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">Top Speed (Limited / Unlimited)</span>
+                        <span id="modalTopSpeed" class="text-base font-semibold text-white"></span>
+                    </div>
+                    <div class="bg-brand-bgDark/40 p-3 rounded-xl border border-gray-800/50">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">Average Market Price</span>
+                        <span id="modalPrice" class="text-base font-semibold text-brand-green"></span>
+                    </div>
+                    <div class="bg-brand-bgDark/40 p-3 rounded-xl border border-gray-800/50">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">1/4 Mile Time</span>
+                        <span id="modalQuarter" class="text-base font-semibold text-white"></span>
+                    </div>
+                    <div class="bg-brand-bgDark/40 p-3 rounded-xl border border-gray-800/50">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">0 - 60 mph</span>
+                        <span id="modalZero60" class="text-base font-semibold text-white"></span>
+                    </div>
+                    <div class="bg-brand-bgDark/40 p-3 rounded-xl border border-gray-800/50">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">0 - 100 mph</span>
+                        <span id="modalZero100" class="text-base font-semibold text-white"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 border-t border-gray-800 pt-4 text-center">
+                    <div class="bg-brand-bgDark/20 p-2.5 rounded-xl border border-gray-800/30">
+                        <span class="text-[9px] text-gray-400 font-bold uppercase block mb-1">Reliability</span>
+                        <div id="modalReliabilityStars" class="text-amber-400 text-xs"></div>
+                        <span id="modalReliabilityText" class="text-[11px] text-gray-400 block mt-0.5"></span>
+                    </div>
+                    <div class="bg-brand-bgDark/20 p-2.5 rounded-xl border border-gray-800/30">
+                        <span class="text-[9px] text-gray-400 font-bold uppercase block mb-1">Cost to Maintain</span>
+                        <div id="modalMaintenanceStars" class="text-amber-400 text-xs"></div>
+                        <span id="modalMaintenanceText" class="text-[11px] text-gray-400 block mt-0.5"></span>
+                    </div>
+                    <div class="bg-brand-bgDark/20 p-2.5 rounded-xl border border-gray-800/30">
+                        <span class="text-[9px] text-gray-400 font-bold uppercase block mb-1">Modifiability</span>
+                        <div id="modalModStars" class="text-amber-400 text-xs"></div>
+                        <span id="modalModText" class="text-[11px] text-gray-400 block mt-0.5"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-brand-bgDark/50 border-t border-gray-800/50 px-6 py-4 flex justify-end space-x-3">
+                <button onclick="closeModal()" class="px-4 py-2 text-xs font-semibold text-gray-400 hover:text-white transition">Dismiss Window</button>
+                <button onclick="window.location.href='index.html'" class="bg-brand-green text-brand-bgDark font-bold text-xs px-5 py-2 rounded-xl hover:opacity-90 transition">
+                    Send to Comparison Matrix
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-t border-gray-900 bg-brand-bgDark mt-24 relative z-40">
+        <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center space-x-2">
+                <div class="w-5 h-5 rounded-full border-2 border-brand-green flex items-center justify-center">
+                    <div class="w-1.5 h-1.5 bg-brand-green rounded-full"></div>
+                </div>
+                <span class="text-white text-sm font-semibold tracking-tight">CarCompare © 2026</span>
+            </div>
+            <div class="flex space-x-6 text-xs text-gray-500">
+                <a href="#" class="hover:text-brand-green transition">Privacy Policy</a>
+                <a href="#" class="hover:text-brand-green transition">Terms of Service</a>
+                <a href="#" class="hover:text-brand-green transition">Contact Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Centralized Car Inventory Database[cite: 1]
+        const carInventory = {
+            "bmw-m3-g80": {
+                name: "BMW M3 Competition (G80)",
+                brand: "BMW M",
+                tagline: "The absolute benchmark for everyday track-capable performance sedans.",
+                image: "/images/g80.png",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },   
+            "bmw-m3-f80": {
+                name: "BMW M3 (F80)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f80.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-m3-e90": {
+                name: "BMW M3 (E90)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e90.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m3-e46": {
+                name: "BMW M3 (E46)",
+                brand: "",
+                tagline: "",
+                image: "/images/e46.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m3-e36": {
+                name: "BMW M3 (E36)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e36.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m3-e30": {
+                name: "BMW M3 (E30)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e30.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m5-e28": {
+                name: "BMW M5 (E28)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e28.webp",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m5-e34": {
+                name: "BMW M4 (E34)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e34.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m5-e39": {
+                name: "BMW M5 (E39)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e39.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m5-e60": {
+                name: "BMW (E60)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e60.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m5-f10": {
+                name: "BMW M5 (F10)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f10.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m5-f90": {
+                name: "BMW M5 (F90)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f90.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m4-f82": {
+                name: "BMW M4 (F82)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f82.avif",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-1m-e82": {
+                name: "BMW 1M (E82)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e82.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m2-f87": {
+                name: "BMW M2 (F87)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f87.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m6-e24": {
+                name: "BMW M5 (E24)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e24.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m6-e63": {
+                name: "BMW M6 (E63)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e63.webp",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m6-f12": {
+                name: "BMW M6 (F12)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f12.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },    
+            "bmw-m6-f06": {
+                name: "BMW M6 (F06)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f06.webp",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-x3-g01": {
+                name: "BMW X3M (G01)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/g01.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-x3-f97": {
+                name: "BMW X3M (F97)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f97.png",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-x4-f98": {
+                name: "BMW X4M (F98)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f98.png",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-x5-f95": {
+                name: "BMW X5M (F95)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f95.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-x5-f85": {
+                name: "BMW X5M (F85)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f85.webp",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-x5-e70": {
+                name: "BMW X5M (E70)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e70.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-x6-f96": {
+                name: "BMW X6M (F96)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f96.avif",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-x6-f86": {
+                name: "BMW X6M (F86)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/f86.jpeg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-x6-e71": {
+                name: "BMW X6M (E71)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e71.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-xm-g09": {
+                name: "BMW XM (G09)",
+                brand: "BMW",
+                tagline: "",
+                image: "",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-z3-e37": {
+                name: "BMW Z3M (E37)",
+                brand: "BMW",
+                tagline: "",
+                image: "/e35.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },  
+            "bmw-z4-e85": {
+                name: "BMW Z4M (E85)",
+                brand: "BMW",
+                tagline: "",
+                image: "/images/e85.jpg",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 85300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sedan', drive: 'xDrive', year: '2025' }
+            },        
+            "bmw-m4-g82": {
+                name: "BMW M4 Competition (G82)",
+                brand: "BMW",
+                tagline: "Aggressive styling meets razor-sharp coupe handling dynamics.",
+                image: "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&w=600&q=80",
+                bhp: 523, torque: 650, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 88300,
+                quarterLap: 11.0, zero60: 3.4, zero100: 7.6, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Coupe', drive: 'xDrive', year: '2025' }
+            },
+            "bmw-m2-g87": {
+                name: "BMW M2 Coupe (G87)",
+                brand: "BMW",
+                tagline: "A pure driver's car featuring a short wheelbase and raw power.",
+                image: "https://images.unsplash.com/photo-1706593922339-fe29707e408d?auto=format&fit=crop&w=600&q=80",
+                bhp: 473, torque: 600, topSpeedLimited: 155, topSpeedUnlimited: 177, price: 66000,
+                quarterLap: 11.7, zero60: 3.9, zero100: 8.5, reliability: 4.0, maintenance: 3.0, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Compact Coupe', drive: 'RWD', year: '2025' }
+            },
+            "bmw-m5-g90": {
+                name: "BMW M5 Hybrid (G90)",
+                brand: "BMW",
+                tagline: "An electrifying high-performance executive missile with plug-in architecture.",
+                image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=600&q=80",
+                bhp: 727, torque: 1000, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 120500,
+                quarterLap: 11.1, zero60: 3.4, zero100: 7.3, reliability: 3.5, maintenance: 2.0, modifiability: 3.5,
+                meta: { tag: 'Hybrids', style: 'bg-amber-500/10 text-amber-400 border-amber-500/20', body: 'PHEV Sedan', drive: 'M xDrive', year: '2026' }
+            },
+            "bmw-m8": {
+                name: "BMW M8 Competition Gran Coupe",
+                brand: "BMW",
+                tagline: "An ultra-luxurious, long-distance cruiser with hypercar power.",
+                image: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=600&q=80",
+                bhp: 617, torque: 750, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 138800,
+                quarterLap: 10.7, zero60: 3.0, zero100: 6.9, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Gran Coupe', drive: 'xDrive', year: '2025' }
+            },
+            "bmw-m135i": {
+                name: "BMW M135i",
+                brand: "BMW",
+                tagline: "An ultra-luxurious, long-distance cruiser with hypercar power.",
+                image: "/images/m135i.jpg",
+                bhp: 617, torque: 750, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 138800,
+                quarterLap: 10.7, zero60: 3.0, zero100: 6.9, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Gran Coupe', drive: 'xDrive', year: '2025' }
+            },
+            "bmw-m140i": {
+                name: "BMW M140i",
+                brand: "BMW",
+                tagline: "An ultra-luxurious, long-distance cruiser with hypercar power.",
+                image: "/images/m140i.png",
+                bhp: 617, torque: 750, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 138800,
+                quarterLap: 10.7, zero60: 3.0, zero100: 6.9, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Gran Coupe', drive: 'xDrive', year: '2025' }
+            },
+            "bmw-m235i": {
+                name: "BMW M235i",
+                brand: "BMW",
+                tagline: "An ultra-luxurious, long-distance cruiser with hypercar power.",
+                image: "/images/m235i.jpeg",
+                bhp: 617, torque: 750, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 138800,
+                quarterLap: 10.7, zero60: 3.0, zero100: 6.9, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Gran Coupe', drive: 'xDrive', year: '2025' }
+            },
+            "bmw-m235i-grancoupe": {
+                name: "BMW M235i Gran Coupe",
+                brand: "BMW",
+                tagline: "An ultra-luxurious, long-distance cruiser with hypercar power.",
+                image: "/images/m235i-grancoupe.png",
+                bhp: 617, torque: 750, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 138800,
+                quarterLap: 10.7, zero60: 3.0, zero100: 6.9, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Gran Coupe', drive: 'xDrive', year: '2025' }
+            },
+            "bmw-m240i": {
+                name: "BMW M240i",
+                brand: "BMW",
+                tagline: "An ultra-luxurious, long-distance cruiser with hypercar power.",
+                image: "/images/m240i.png",
+                bhp: 617, torque: 750, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 138800,
+                quarterLap: 10.7, zero60: 3.0, zero100: 6.9, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Gran Coupe', drive: 'xDrive', year: '2025' }
+            },
+            "bmw-m340i": {
+                name: "BMW M340i",
+                brand: "BMW",
+                tagline: "An ultra-luxurious, long-distance cruiser with hypercar power.",
+                image: "/images/m340i.png",
+                bhp: 617, torque: 750, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 138800,
+                quarterLap: 10.7, zero60: 3.0, zero100: 6.9, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Gran Coupe', drive: 'xDrive', year: '2025' }
+            },
+            "bmw-m440i": {
+                name: "BMW M440i",
+                brand: "BMW",
+                tagline: "An ultra-luxurious, long-distance cruiser with hypercar power.",
+                image: "/images/m440i.png",
+                bhp: 617, torque: 750, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 138800,
+                quarterLap: 10.7, zero60: 3.0, zero100: 6.9, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Gran Coupe', drive: 'xDrive', year: '2025' }
+            },
+            "bmw-m550i": {
+                name: "BMW M550i",
+                brand: "BMW",
+                tagline: "An ultra-luxurious, long-distance cruiser with hypercar power.",
+                image: "/images/m550i.png",
+                bhp: 617, torque: 750, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 138800,
+                quarterLap: 10.7, zero60: 3.0, zero100: 6.9, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Gran Coupe', drive: 'xDrive', year: '2025' }
+            },
+            "bmw-m760e": {
+                name: "BMW m760e",
+                brand: "BMW",
+                tagline: "An ultra-luxurious, long-distance cruiser with hypercar power.",
+                image: "/images/m760e",
+                bhp: 617, torque: 750, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 138800,
+                quarterLap: 10.7, zero60: 3.0, zero100: 6.9, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Gran Coupe', drive: 'xDrive', year: '2025' }
+            },
+            "bmw-m850i": {
+                name: "BMW M850i",
+                brand: "BMW",
+                tagline: "An ultra-luxurious, long-distance cruiser with hypercar power.",
+                image: "/images/m850i.png",
+                bhp: 617, torque: 750, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 138800,
+                quarterLap: 10.7, zero60: 3.0, zero100: 6.9, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Gran Coupe', drive: 'xDrive', year: '2025' }
+            },
+
+        };
+
+        let currentUser = localStorage.getItem('carCompare_currentUser') || null;
+        let selectedTransmission = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setupNavigationAuth();
+            renderShowroom();
+        });
+
+        function setupNavigationAuth() {
+            const greeting = document.getElementById('userGreeting');
+            const authBtn = document.getElementById('authBtn');
+            if (currentUser) {
+                greeting.textContent = `Hello, ${currentUser}`;
+                greeting.classList.remove('hidden');
+                authBtn.textContent = 'Logout';
+            } else {
+                greeting.classList.add('hidden');
+                authBtn.textContent = 'Login';
+            }
+        }
+
+        function handleAuthAction() {
+            if (currentUser) {
+                localStorage.removeItem('carCompare_currentUser');
+                window.location.reload();
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+
+        function getUserFavorites() {
+            if (!currentUser) return [];
+            const users = JSON.parse(localStorage.getItem('carCompare_users') || '{}');
+            return (users[currentUser] && users[currentUser].favorites) ? users[currentUser].favorites : [];
+        }
+
+        function toggleFavorite(e, carKey) {
+            e.stopPropagation(); 
+            if (!currentUser) {
+                alert("Authentication Required: Please login to save vehicles.");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('carCompare_users') || '{}');
+            if (!users[currentUser]) users[currentUser] = { password: '', favorites: [] };
+            if (!users[currentUser].favorites) users[currentUser].favorites = [];
+
+            let favs = users[currentUser].favorites;
+            const index = favs.indexOf(carKey);
+
+            if (index > -1) {
+                favs.splice(index, 1);
+            } else {
+                favs.push(carKey);
+            }
+
+            users[currentUser].favorites = favs;
+            localStorage.setItem('carCompare_users', JSON.stringify(users));
+            renderShowroom();
+        }
+
+        function setTransmissionFilter(type) {
+            const btnAuto = document.getElementById('btnAuto');
+            const btnManual = document.getElementById('btnManual');
+            
+            if (selectedTransmission === type) {
+                selectedTransmission = null;
+                btnAuto.className = "py-2 rounded-xl text-xs font-medium border border-gray-800 text-gray-400 hover:border-gray-700 transition";
+                btnManual.className = "py-2 rounded-xl text-xs font-medium border border-gray-800 text-gray-400 hover:border-gray-700 transition";
+            } else {
+                selectedTransmission = type;
+                if (type === 'Automatic') {
+                    btnAuto.className = "py-2 rounded-xl text-xs font-medium border border-brand-green/40 bg-brand-green/5 text-white";
+                    btnManual.className = "py-2 rounded-xl text-xs font-medium border border-gray-800 text-gray-400 hover:border-gray-700 transition";
+                } else {
+                    btnManual.className = "py-2 rounded-xl text-xs font-medium border border-brand-green/40 bg-brand-green/5 text-white";
+                    btnAuto.className = "py-2 rounded-xl text-xs font-medium border border-gray-800 text-gray-400 hover:border-gray-700 transition";
+                }
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('filterMake').value = 'All';
+            document.getElementById('filterDrive').value = 'All';
+            document.getElementById('filterMinYear').value = '';
+            document.getElementById('filterMaxYear').value = '';
+            selectedTransmission = null;
+            document.getElementById('btnAuto').className = "py-2 rounded-xl text-xs font-medium border border-gray-800 text-gray-400 hover:border-gray-700 transition";
+            document.getElementById('btnManual').className = "py-2 rounded-xl text-xs font-medium border border-gray-800 text-gray-400 hover:border-gray-700 transition";
+            
+            document.querySelectorAll('.filterTag').forEach(cb => cb.checked = false);
+            renderShowroom();
+        }
+
+        function renderShowroom() {
+            const container = document.getElementById('showroomGrid');
+            const totalCounter = document.getElementById('vehicleCount');
+            const favorites = getUserFavorites();
+            
+            if (!container) return;
+
+            // Gather Filter Values
+            const makeFilter = document.getElementById('filterMake').value;
+            const driveFilter = document.getElementById('filterDrive').value;
+            const minYear = parseInt(document.getElementById('filterMinYear').value) || 0;
+            const maxYear = parseInt(document.getElementById('filterMaxYear').value) || 3000;
+            
+            const activeTags = [];
+            document.querySelectorAll('.filterTag:checked').forEach(cb => activeTags.push(cb.value));
+
+            // Filter Matrix Logic
+            let filteredKeys = Object.keys(carInventory).filter(key => {
+                const car = carInventory[key];
+                
+                if (makeFilter !== 'All' && car.brand.toLowerCase() !== makeFilter.toLowerCase()) return false;
+                if (driveFilter !== 'All' && car.meta.drive !== driveFilter) return false;
+                if (car.meta.year < minYear || car.meta.year > maxYear) return false;
+                if (selectedTransmission && car.meta.transmission !== selectedTransmission) return false;
+                if (activeTags.length > 0 && !activeTags.includes(car.meta.tag)) return false;
+                
+                return true;
+            });
+
+            // Sorting Engine Logic
+            const sortVal = document.getElementById('sort').value;
+            filteredKeys.sort((a, b) => {
+                if (sortVal === 'newest') return carInventory[b].meta.year - carInventory[a].meta.year;
+                if (sortVal === 'oldest') return carInventory[a].meta.year - carInventory[b].meta.year;
+                if (sortVal === 'az') return carInventory[a].name.localeCompare(carInventory[b].name);
+                if (sortVal === 'price-high') return carInventory[b].price - carInventory[a].price;
+                return 0;
+            });
+
+            totalCounter.textContent = filteredKeys.length;
+            container.innerHTML = '';
+
+            if (filteredKeys.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center text-sm text-gray-400 bg-brand-cardBg p-8 rounded-xl border border-gray-800">No vehicles match your active system filters.</div>`;
+                return;
+            }
+
+            filteredKeys.forEach(key => {
+                const car = carInventory[key];
+                const isFav = favorites.includes(key);
+                const brand = car.brand;
+                const shortName = car.name.replace(new RegExp('^' + brand, 'i'), '').trim();
+                const currentMeta = car.meta;
+
+                const heartIcon = isFav 
+                    ? `<svg class="w-4 h-4 fill-brand-green text-brand-green" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.5 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`
+                    : `<svg class="w-4 h-4 text-brand-green group-hover:fill-brand-green/20 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>`;
+
+                const cardHTML = `
+                    <div class="bg-brand-cardBg border border-gray-800/80 rounded-2xl overflow-hidden hover:border-brand-green/30 transition group flex flex-col justify-between cursor-pointer" onclick="openModal('${key}')">
+                        <div>
+                            <div class="relative bg-brand-bgDark aspect-[16/10] flex items-center justify-center overflow-hidden">
+                                <img src="${car.image}" alt="${car.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                <span class="absolute top-3 left-3 backdrop-blur-md text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-md uppercase border ${currentMeta.style}">${currentMeta.tag}</span>
+                            </div>
+                            <div class="p-5 space-y-2">
+                                <div class="text-xs text-gray-500 font-semibold tracking-wide">${brand}</div>
+                                <h3 class="text-lg font-bold text-white tracking-tight group-hover:text-brand-green transition">${shortName}</h3>
+                                <div class="flex items-center space-x-2 text-xs text-gray-400 pt-1">
+                                    <span class="bg-brand-bgDark border border-gray-800 px-2.5 py-1 rounded-md">${currentMeta.year}</span>
+                                    <span>•</span>
+                                    <span>${currentMeta.body}</span>
+                                    <span>•</span>
+                                    <span>${currentMeta.drive}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 border-t border-gray-800/40 mt-3 flex items-center justify-between gap-2" onclick="event.stopPropagation();">
+                            <button class="flex-1 border border-gray-800 hover:border-gray-700 text-gray-300 py-2.5 rounded-xl text-xs font-semibold transition" onclick="window.location.href='index.html'">Compare</button>
+                            <button onclick="toggleFavorite(event, '${key}')" class="bg-brand-bgDark border border-brand-green/20 p-2.5 rounded-xl hover:bg-brand-green/10 transition">
+                                ${heartIcon}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        function generateStarString(rating) {
+            let out = '';
+            for(let i = 1; i <= 5; i++) {
+                if(i <= Math.floor(rating)) out += '★';
+                else if(i - 0.5 === rating) out += '½';
+                else out += '☆';
+            }
+            return out;
+        }
+
+        function openModal(key) {
+            const car = carInventory[key];
+            if (!car) return;
+
+            document.getElementById('modalImg').src = car.image;
+            document.getElementById('modalName').textContent = car.name;
+            document.getElementById('modalTagline').textContent = car.tagline || 'High-Performance Profile Data Matrix';
+
+            document.getElementById('modalBhp').textContent = `${car.bhp.toLocaleString()} bhp`;
+            document.getElementById('modalTorque').textContent = `${car.torque.toLocaleString()} Nm`;
+            document.getElementById('modalTopSpeed').textContent = `${car.topSpeedLimited} mph / ${car.topSpeedUnlimited} mph`;
+            document.getElementById('modalPrice').textContent = `$${car.price.toLocaleString()}`;
+            document.getElementById('modalQuarter').textContent = `${car.quarterLap} sec`;
+            document.getElementById('modalZero60').textContent = `${car.zero60} sec`;
+            document.getElementById('modalZero100').textContent = `${car.zero100} sec`;
+
+            document.getElementById('modalReliabilityStars').textContent = generateStarString(car.reliability);
+            document.getElementById('modalReliabilityText').textContent = `${car.reliability} / 5`;
+
+            document.getElementById('modalMaintenanceStars').textContent = generateStarString(car.maintenance);
+            document.getElementById('modalMaintenanceText').textContent = `${car.maintenance} / 5`;
+
+            document.getElementById('modalModStars').textContent = generateStarString(car.modifiability);
+            document.getElementById('modalModText').textContent = `${car.modifiability} / 5`;
+
+            const modal = document.getElementById('detailsModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.firstElementChild.classList.remove('scale-95');
+                modal.firstElementChild.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('detailsModal');
+            modal.firstElementChild.classList.remove('scale-100');
+            modal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+    </script>
+</body>
+</html>

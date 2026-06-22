@@ -1,0 +1,109 @@
+            "audi-rs4-avant": {
+                name: "Audi RS4 Avant",
+                brand: "AUDI",
+                tagline: "The modern performance wagon pairing peak versatility with twin-turbo punch.",
+                image: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=600&q=80",
+                bhp: 464, torque: 601, topSpeedLimited: 155, topSpeedUnlimited: 186, price: 89000,
+                quarterLap: 11.9, zero60: 3.7, zero100: 8.9, reliability: 3.5, maintenance: 3.0, modifiability: 4.0,
+                meta: { tag: 'Wagons', style: 'bg-purple-500/10 text-purple-400 border-purple-500/20', body: 'Wagon (Avant)', drive: 'Quattro', year: '2025' }
+            },
+            "audi-rs5": {
+                name: "Audi RS5",
+                brand: "AUDI",
+                tagline: "Elegant, flowing fastback styling fused with precise quattro grip.",
+                image: "https://images.unsplash.com/photo-1619106012353-832f22b79237?auto=format&fit=crop&w=600&q=80",
+                bhp: 630, torque: 824, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 79900,
+                quarterLap: 11.8, zero60: 3.6, zero100: 8.8, reliability: 3.5, maintenance: 3.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sportback', drive: 'Quattro', year: '2026' }
+            },
+            "audi-rs6-avant": {
+                name: "Audi RS6 Avant",
+                brand: "AUDI",
+                tagline: "A brutal, wide-body wagon that completely dominates the asphalt.",
+                image: "https://images.unsplash.com/photo-1614200187471-da60ae9a15f1?auto=format&fit=crop&w=600&q=80",
+                bhp: 621, torque: 850, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 126600,
+                quarterLap: 11.2, zero60: 3.3, zero100: 7.2, reliability: 3.5, maintenance: 2.5, modifiability: 4.0,
+                meta: { tag: 'Wagons', style: 'bg-purple-500/10 text-purple-400 border-purple-500/20', body: 'Wagon (Avant)', drive: 'Quattro', year: '2026' }
+            },
+            "audi-rs7": {
+                name: "Audi RS7 Performance",
+                brand: "AUDI",
+                tagline: "A sweeping, high-performance sportback designed for effortless high speeds.",
+                image: "https://images.unsplash.com/photo-1616447154831-470075d6c665?auto=format&fit=crop&w=600&q=80",
+                bhp: 621, torque: 850, topSpeedLimited: 155, topSpeedUnlimited: 190, price: 128800,
+                quarterLap: 11.3, zero60: 3.3, zero100: 7.3, reliability: 3.5, maintenance: 2.5, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Sportback', drive: 'Quattro', year: '2026' }
+            },
+            "audi-r8": {
+                name: "Audi R8 V10 GT",
+                brand: "AUDI",
+                tagline: "A glorious, naturally aspirated V10 supercar swan song.",
+                image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=600&q=80",
+                bhp: 612, torque: 565, topSpeedLimited: 199, topSpeedUnlimited: 199, price: 251300,
+                quarterLap: 10.6, zero60: 3.1, zero100: 6.4, reliability: 4.0, maintenance: 1.5, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Mid-Engine Coupe', drive: 'RWD', year: '2024' }
+            },
+            "amg-c63s": {
+                name: "Mercedes-AMG C63s E Performance",
+                brand: "MERCEDES-AMG",
+                tagline: "Formula 1 hybrid tech deployed into an insane street compact.",
+                image: "https://images.unsplash.com/photo-1618842676088-c4d48a6a7c9d?auto=format&fit=crop&w=600&q=80",
+                bhp: 671, torque: 1020, topSpeedLimited: 155, topSpeedUnlimited: 174, price: 83900,
+                quarterLap: 11.2, zero60: 3.3, zero100: 7.4, reliability: 3.0, maintenance: 2.5, modifiability: 3.0,
+                meta: { tag: 'Hybrids', style: 'bg-amber-500/10 text-amber-400 border-amber-500/20', body: 'PHEV Sedan', drive: '4MATIC+', year: '2025' }
+            },
+            "amg-e63s": {
+                name: "Mercedes-AMG E63s Final Edition",
+                brand: "MERCEDES-AMG",
+                tagline: "The executive hot rod combining absolute luxury with an aggressive exhaust note.",
+                image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80",
+                bhp: 603, torque: 850, topSpeedLimited: 155, topSpeedUnlimited: 186, price: 115000,
+                quarterLap: 11.1, zero60: 3.3, zero100: 7.3, reliability: 3.5, maintenance: 2.0, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Luxury Sedan', drive: '4MATIC+', year: '2024' }
+            },
+            "amg-gt63s-e": {
+                name: "Mercedes-AMG GT63s E Performance",
+                brand: "MERCEDES-AMG",
+                tagline: "An absolute plug-in torque monster with a luxurious 4-door layout.",
+                image: "https://images.unsplash.com/photo-1617654112364-30b1397f181a?auto=format&fit=crop&w=600&q=80",
+                bhp: 831, torque: 1470, topSpeedLimited: 196, topSpeedUnlimited: 196, price: 200500,
+                quarterLap: 10.3, zero60: 2.7, zero100: 5.7, reliability: 3.5, maintenance: 2.0, modifiability: 3.5,
+                meta: { tag: 'Hybrids', style: 'bg-amber-500/10 text-amber-400 border-amber-500/20', body: '4-Door Coupe', drive: '4MATIC+', year: '2025' }
+            },
+            "amg-s63": {
+                name: "Mercedes-AMG S63 E Performance",
+                brand: "MERCEDES-AMG",
+                tagline: "The absolute pinnacle of high-performance luxury travel.",
+                image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80",
+                bhp: 791, torque: 1430, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 182200,
+                quarterLap: 11.0, zero60: 3.2, zero100: 7.1, reliability: 3.5, maintenance: 1.5, modifiability: 2.5,
+                meta: { tag: 'Hybrids', style: 'bg-amber-500/10 text-amber-400 border-amber-500/20', body: 'PHEV Limo', drive: '4MATIC+', year: '2025' }
+            },
+            "amg-cla45s": {
+                name: "Mercedes-AMG CLA 45s",
+                brand: "MERCEDES-AMG",
+                tagline: "The world's most powerful production four-cylinder coupe-sedan.",
+                image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80",
+                bhp: 415, torque: 500, topSpeedLimited: 155, topSpeedUnlimited: 168, price: 57500,
+                quarterLap: 12.1, zero60: 4.0, zero100: 9.3, reliability: 4.0, maintenance: 3.5, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Coupe-Sedan', drive: '4MATIC+', year: '2025' }
+            },
+            "amg-a45s": {
+                name: "Mercedes-AMG A45s 4MATIC+",
+                brand: "MERCEDES-AMG",
+                tagline: "A pure pocket rocket hatchback that aggressively punches well above its weight class.",
+                image: "https://images.unsplash.com/photo-1621993202323-f438eec934ff?auto=format&fit=crop&w=600&q=80",
+                bhp: 415, torque: 500, topSpeedLimited: 168, topSpeedUnlimited: 168, price: 65000,
+                quarterLap: 12.0, zero60: 3.9, zero100: 9.1, reliability: 4.0, maintenance: 3.5, modifiability: 4.0,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Hyper-Hatch', drive: '4MATIC+', year: '2025' }
+            }
+
+                        "audi-rs3": {
+                name: "Audi RS3",
+                brand: "AUDI",
+                tagline: "Five-cylinder rally heritage packed into an aggressive street machine.",
+                image: "https://images.unsplash.com/photo-1706112232462-cbcaaf06fc6e?auto=format&fit=crop&w=600&q=80",
+                bhp: 395, torque: 500, topSpeedLimited: 155, topSpeedUnlimited: 180, price: 62000,
+                quarterLap: 11.8, zero60: 3.6, zero100: 8.7, reliability: 4.0, maintenance: 3.5, modifiability: 4.5,
+                meta: { tag: 'Supercars', style: 'bg-blue-500/10 text-blue-400 border-blue-500/20', body: 'Compact Sedan', drive: 'Quattro', year: '2026' }
+            },

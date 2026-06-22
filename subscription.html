@@ -1,0 +1,214 @@
+]<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarCompare | Subscription Plans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            green: '#4ade80',    
+                            darkGreen: '#1e3a24',
+                            bgDark: '#0d1117',   
+                            cardBg: '#161b22',   
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-bgDark text-gray-100 font-sans overflow-x-hidden min-flex flex-col min-h-screen justify-between">
+
+    <nav class="fixed w-full z-50 bg-brand-bgDark/80 backdrop-blur-md border-b border-gray-800/50 px-6 py-4 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="w-6 h-6 rounded-full border-2 border-brand-green flex items-center justify-center">
+                    <div class="w-2 h-2 bg-brand-green rounded-full"></div>
+                </div>
+                <span class="text-white font-bold text-lg tracking-tight">CarCompare</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-400">
+                <a href="compare-cars.html" class="hover:text-brand-green transition">Compare</a>
+                <a href="browse-cars.html" class="hover:text-brand-green transition">Browse Cars</a>
+                <a href="saved.html" class="hover:text-brand-green transition">Saved Cars</a>
+                <a href="about.html" class="hover:text-brand-green transition">About</a>
+                <a href="settings.html" class="hover:text-brand-green transition">Settings</a> 
+            </div>
+
+            <div id="nav-auth-container">
+                <button class="border border-brand-green text-brand-green px-5 py-1.5 rounded-md text-sm font-medium hover:bg-brand-green hover:text-brand-bgDark transition duration-300" onclick="window.location.href='login.html'">
+                    Login
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-30 max-w-7xl mx-auto px-6 pt-32 pb-24 flex flex-col justify-center items-center flex-1 w-full">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <span class="bg-brand-green/10 text-brand-green text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Pricing Plans</span>
+            <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight leading-none">Upgrade your garage matrix.</h1>
+            <p class="text-gray-400 text-base md:text-lg font-light max-w-xl mx-auto">
+                Unlock deeper analytical telemetry, customized dynamic filters, and real-time comparative data.
+            </p>
+        </div>
+
+        <section class="grid md:grid-cols-3 gap-8 w-full items-stretch">
+            
+            <div class="bg-brand-cardBg border border-gray-800 p-8 rounded-3xl flex flex-col justify-between hover:border-gray-700 transition relative duration-300 group">
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Free</h3>
+                        <p class="text-xs text-gray-500 mt-1">Essential evaluation features</p>
+                    </div>
+                    <div class="flex items-baseline text-white">
+                        <span class="text-4xl font-extrabold tracking-tight">£0</span>
+                        <span class="text-gray-500 text-sm ml-1">/forever</span>
+                    </div>
+                    <hr class="border-gray-800" />
+                    <ul class="space-y-3.5 text-sm text-gray-400">
+                        <li class="flex items-center space-x-2">
+                            <span class="text-brand-green">✓</span> <span>Compare up to 2 cars simultaneously</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-brand-green">✓</span> <span>Standard database access module</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-brand-green">✓</span> <span>Basic AI Garage Wizard access</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pt-8">
+                    <button class="w-full bg-brand-bgDark border border-gray-800 text-white font-semibold py-3 px-4 rounded-xl hover:border-gray-700 transition duration-200 text-sm">
+                        Current Account
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-brand-cardBg border-2 border-brand-green p-8 rounded-3xl flex flex-col justify-between shadow-xl shadow-brand-green/5 relative duration-300 transform md:-translate-y-2">
+                <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-brand-green text-black font-bold text-[10px] tracking-widest uppercase px-3 py-1 rounded-full shadow-md">
+                    Most Popular
+                </span>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Premium Pro</h3>
+                        <p class="text-xs text-brand-green font-medium mt-1">Advanced telemetry comparison</p>
+                    </div>
+                    <div class="flex items-baseline text-white">
+                        <span class="text-4xl font-extrabold tracking-tight">£9</span>
+                        <span class="text-gray-400 text-sm ml-1">/month</span>
+                    </div>
+                    <hr class="border-gray-800" />
+                    <ul class="space-y-3.5 text-sm text-gray-200">
+                        <li class="flex items-center space-x-2">
+                            <span class="text-brand-green">✓</span> <span><strong>Unlimited</strong> side-by-side matrices</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-brand-green">✓</span> <span>Depreciation & cost-to-own analytics</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-brand-green">✓</span> <span>Uncapped AI Genius priority prompt lines</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-brand-green">✓</span> <span>Early allocation access to new logs</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pt-8">
+                    <button class="w-full bg-brand-green text-black font-bold py-3 px-4 rounded-xl hover:bg-green-400 shadow-lg shadow-brand-green/20 transition duration-200 text-sm">
+                        Upgrade Matrix Pro
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-brand-cardBg border border-gray-800 p-8 rounded-3xl flex flex-col justify-between hover:border-gray-700 transition relative duration-300 group">
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Elite Fleet</h3>
+                        <p class="text-xs text-gray-500 mt-1">Enterprise lookup & dealers</p>
+                    </div>
+                    <div class="flex items-baseline text-white">
+                        <span class="text-4xl font-extrabold tracking-tight">£29</span>
+                        <span class="text-gray-500 text-sm ml-1">/month</span>
+                    </div>
+                    <hr class="border-gray-800" />
+                    <ul class="space-y-3.5 text-sm text-gray-400">
+                        <li class="flex items-center space-x-2">
+                            <span class="text-brand-green">✓</span> <span>Everything included inside Premium Pro</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-brand-green">✓</span> <span>Multi-user seat configurations (up to 5)</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-brand-green">✓</span> <span>Live dealer API vehicle feed syncing</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-brand-green">✓</span> <span>Dedicated tech support concierge line</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pt-8">
+                    <button class="w-full bg-brand-bgDark border border-gray-800 text-white font-semibold py-3 px-4 rounded-xl hover:border-gray-700 transition duration-200 text-sm">
+                        Contact Fleet Ops
+                    </button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="border-t border-gray-900 bg-brand-bgDark w-full relative">
+        <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="w-5 h-5 rounded-full border-2 border-brand-green flex items-center justify-center">
+                    <div class="w-1.5 h-1.5 bg-brand-green rounded-full"></div>
+                </div>
+                <span class="text-white text-sm font-semibold tracking-tight">CarCompare © 2026</span>
+            </div>
+            <div class="flex space-x-6 text-xs text-gray-500">
+                <a href="#" class="hover:text-brand-green transition">Privacy Policy</a>
+                <a href="#" class="hover:text-brand-green transition">Terms of Service</a>
+                <a href="#" class="hover:text-brand-green transition">Contact Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function checkAuthUI() {
+            const currentUser = localStorage.getItem('carCompare_currentUser');
+            const authContainer = document.getElementById('nav-auth-container');
+            
+            if (currentUser && authContainer) {
+                authContainer.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <span class="text-xs text-gray-400 hidden lg:inline">Welcome, <strong class="text-brand-green">${currentUser}</strong></span>
+                        <button onclick="handleLogOut()" class="border border-red-500/30 text-red-400 px-4 py-1.5 rounded-md text-sm font-medium hover:bg-red-500 hover:text-white transition duration-300">
+                            Logout
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function handleLogOut() {
+            localStorage.removeItem('carCompare_currentUser');
+            window.location.reload(); 
+        }
+
+        window.addEventListener('DOMContentLoaded', checkAuthUI);
+    </script>
+</body>
+</html>

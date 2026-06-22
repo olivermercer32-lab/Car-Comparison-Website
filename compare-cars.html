@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarCompare | Dynamic Matchup Matrix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #21262d; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #30363d; }
+        html { scroll-behavior: smooth; }
+        
+        .matrix-cell {
+            transition: background-color 0.4s ease, color 0.3s ease;
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            green: '#4ade80',    
+                            darkGreen: '#1e3a24',
+                            bgDark: '#0d1117',   
+                            cardBg: '#161b22',   
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script src="inventory.js"></script>
+</head>
+<body class="bg-brand-bgDark text-gray-100 font-sans overflow-x-hidden pt-20">
+
+    <nav class="fixed top-0 left-0 w-full z-50 bg-brand-bgDark/80 backdrop-blur-md border-b border-gray-800/50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.reload()">
+                <div class="w-6 h-6 rounded-full border-2 border-brand-green flex items-center justify-center">
+                    <div class="w-2 h-2 bg-brand-green rounded-full"></div>
+                </div>
+                <span class="text-white font-bold text-lg tracking-tight">CarCompare</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-400">
+                <a href="index.html" class="text-white hover:text-brand-green transition">Home</a>
+                <a href="browse-cars.html" class="hover:text-brand-green transition">Browse Cars</a>
+                <a href="saved.html" class="hover:text-brand-green transition">Saved Cars</a>
+                <a href="#" class="hover:text-brand-green transition">Chat</a>
+                <a href="#" class="hover:text-brand-green transition">About</a>
+            </div>
+
+            <div>
+                <button class="border border-brand-green text-brand-green px-5 py-1.5 rounded-md text-sm font-medium hover:bg-brand-green hover:text-brand-bgDark transition duration-300">
+                    Login
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div class="border-b border-gray-800 pb-6 mb-8">
+            <span class="text-xs font-bold uppercase tracking-widest text-brand-green">Interactive Evaluation</span>
+            <h1 class="text-3xl font-bold text-white tracking-tight mt-1">Dynamic Matchup Matrix</h1>
+            <p class="text-sm text-gray-400 mt-1">Select any two vehicles from the dropdown pickers. The layout automatically updates color-coded winners and losers.</p>
+        </div>
+
+        <div class="bg-brand-cardBg border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[750px]">
+                    
+                    <thead>
+                        <tr class="bg-brand-bgDark/40 border-b border-gray-800">
+                            <th class="p-6 text-sm font-bold tracking-wider text-gray-400 w-1/4 uppercase">Spec Metric</th>
+                            
+                            <th class="p-6 text-center w-3/8 border-r border-gray-800/30">
+                                <div class="space-y-4 max-w-sm mx-auto">
+                                    <div class="relative">
+                                        <label class="text-[10px] uppercase tracking-widest text-gray-500 block mb-1 text-left font-bold">Select Vehicle A</label>
+                                        <select id="selectCarA" onchange="updateComparison()" class="w-full bg-brand-bgDark border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-green cursor-pointer">
+                                            </select>
+                                    </div>
+                                    <div class="aspect-[16/9] rounded-xl overflow-hidden border border-gray-800 bg-gray-900 shadow-inner">
+                                        <img id="imgCarA" src="" alt="Car A" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                            </th>
+                            
+                            <th class="p-6 text-center w-3/8">
+                                <div class="space-y-4 max-w-sm mx-auto">
+                                    <div class="relative">
+                                        <label class="text-[10px] uppercase tracking-widest text-gray-500 block mb-1 text-left font-bold">Select Vehicle B</label>
+                                        <select id="selectCarB" onchange="updateComparison()" class="w-full bg-brand-bgDark border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-green cursor-pointer">
+                                            </select>
+                                    </div>
+                                    <div class="aspect-[16/9] rounded-xl overflow-hidden border border-gray-800 bg-gray-900 shadow-inner">
+                                        <img id="imgCarB" src="" alt="Car B" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody class="divide-y divide-gray-800/50 text-sm">
+                        
+                        <tr id="row_bhp">
+                            <td class="p-4 px-6 font-semibold text-gray-400 bg-brand-bgDark/10">BHP</td>
+                            <td id="cell_A_bhp" class="matrix-cell p-4 text-center border-r border-gray-800/20 font-medium"></td>
+                            <td id="cell_B_bhp" class="matrix-cell p-4 text-center font-medium"></td>
+                        </tr>
+
+                        <tr id="row_torque">
+                            <td class="p-4 px-6 font-semibold text-gray-400 bg-brand-bgDark/10">Torque</td>
+                            <td id="cell_A_torque" class="matrix-cell p-4 text-center border-r border-gray-800/20 font-medium"></td>
+                            <td id="cell_B_torque" class="matrix-cell p-4 text-center font-medium"></td>
+                        </tr>
+
+                        <tr id="row_topSpeed">
+                            <td class="p-4 px-6 font-semibold text-gray-400 bg-brand-bgDark/10">Top Speed <span class="text-[10px] text-gray-500 block">(With / Without Limiter)</span></td>
+                            <td id="cell_A_topSpeed" class="matrix-cell p-4 text-center border-r border-gray-800/20"></td>
+                            <td id="cell_B_topSpeed" class="matrix-cell p-4 text-center"></td>
+                        </tr>
+
+                        <tr id="row_price">
+                            <td class="p-4 px-6 font-semibold text-gray-400 bg-brand-bgDark/10">Average Price</td>
+                            <td id="cell_A_price" class="matrix-cell p-4 text-center border-r border-gray-800/20"></td>
+                            <td id="cell_B_price" class="matrix-cell p-4 text-center"></td>
+                        </tr>
+
+                        <tr id="row_quarterLap">
+                            <td class="p-4 px-6 font-semibold text-gray-400 bg-brand-bgDark/10">1/4 Mile Time</td>
+                            <td id="cell_A_quarterLap" class="matrix-cell p-4 text-center border-r border-gray-800/20"></td>
+                            <td id="cell_B_quarterLap" class="matrix-cell p-4 text-center"></td>
+                        </tr>
+
+                        <tr id="row_zero60">
+                            <td class="p-4 px-6 font-semibold text-gray-400 bg-brand-bgDark/10">0-60 mph</td>
+                            <td id="cell_A_zero60" class="matrix-cell p-4 text-center border-r border-gray-800/20"></td>
+                            <td id="cell_B_zero60" class="matrix-cell p-4 text-center"></td>
+                        </tr>
+
+                        <tr id="row_zero100">
+                            <td class="p-4 px-6 font-semibold text-gray-400 bg-brand-bgDark/10">0-100 mph</td>
+                            <td id="cell_A_zero100" class="matrix-cell p-4 text-center border-r border-gray-800/20"></td>
+                            <td id="cell_B_zero100" class="matrix-cell p-4 text-center"></td>
+                        </tr>
+
+                        <tr id="row_reliability">
+                            <td class="p-4 px-6 font-semibold text-gray-400 bg-brand-bgDark/10">Reliability</td>
+                            <td id="cell_A_reliability" class="matrix-cell p-4 text-center border-r border-gray-800/20"></td>
+                            <td id="cell_B_reliability" class="matrix-cell p-4 text-center"></td>
+                        </tr>
+
+                        <tr id="row_maintenance">
+                            <td class="p-4 px-6 font-semibold text-gray-400 bg-brand-bgDark/10">Cost to Maintain</td>
+                            <td id="cell_A_maintenance" class="matrix-cell p-4 text-center border-r border-gray-800/20"></td>
+                            <td id="cell_B_maintenance" class="matrix-cell p-4 text-center"></td>
+                        </tr>
+
+                        <tr id="row_modifiability">
+                            <td class="p-4 px-6 font-semibold text-gray-400 bg-brand-bgDark/10">Modifiability</td>
+                            <td id="cell_A_modifiability" class="matrix-cell p-4 text-center border-r border-gray-800/20"></td>
+                            <td id="cell_B_modifiability" class="matrix-cell p-4 text-center"></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-gray-900 bg-brand-bgDark mt-24 relative z-40">
+        <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center space-x-2">
+                <div class="w-5 h-5 rounded-full border-2 border-brand-green flex items-center justify-center">
+                    <div class="w-1.5 h-1.5 bg-brand-green rounded-full"></div>
+                </div>
+                <span class="text-white text-sm font-semibold tracking-tight">CarCompare © 2026</span>
+            </div>
+            <div class="flex space-x-6 text-xs text-gray-500">
+                <a href="#" class="hover:text-brand-green transition">Privacy Policy</a>
+                <a href="#" class="hover:text-brand-green transition">Terms of Service</a>
+                <a href="#" class="hover:text-brand-green transition">Contact Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const selectA = document.getElementById('selectCarA');
+            const selectB = document.getElementById('selectCarB');
+            
+            Object.keys(carInventory).forEach(key => {
+                const optA = document.createElement('option');
+                optA.value = key;
+                optA.textContent = carInventory[key].name;
+                selectA.appendChild(optA);
+
+                const optB = document.createElement('option');
+                optB.value = key;
+                optB.textContent = carInventory[key].name;
+                selectB.appendChild(optB);
+            });
+
+            const keys = Object.keys(carInventory);
+            if(keys.length >= 2) {
+                selectA.value = keys[0];
+                selectB.value = keys[1];
+            } else if(keys.length > 0) {
+                selectA.value = keys[0];
+                selectB.value = keys[0];
+            }
+            
+            updateComparison();
+        });
+
+        function generateStars(rating) {
+            let starsHTML = '<div class="flex justify-center text-amber-400 text-xs tracking-tight">';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= Math.floor(rating)) {
+                    starsHTML += '★';
+                } else if (i - 0.5 === rating) {
+                    starsHTML += '½';
+                } else {
+                    starsHTML += '☆';
+                }
+            }
+            starsHTML += '</div>';
+            return starsHTML;
+        }
+
+        function updateComparison() {
+            const idA = document.getElementById('selectCarA').value;
+            const idB = document.getElementById('selectCarB').value;
+            
+            const carA = carInventory[idA];
+            const carB = carInventory[idB];
+
+            if (!carA || !carB) return;
+
+            document.getElementById('imgCarA').src = carA.image;
+            document.getElementById('imgCarB').src = carB.image;
+
+            const parameters = [
+                { key: 'bhp', type: 'numeric', higherIsBetter: true, suffix: ' bhp', formatFn: val => val.toLocaleString() },
+                { key: 'torque', type: 'numeric', higherIsBetter: true, suffix: ' Nm', formatFn: val => val.toLocaleString() },
+                { 
+                    key: 'topSpeed', 
+                    type: 'custom', 
+                    evalFn: (a, b) => a.topSpeedUnlimited > b.topSpeedUnlimited,
+                    renderFn: (car) => `${car.topSpeedLimited} mph / ${car.topSpeedUnlimited} mph`
+                },
+                { key: 'price', type: 'numeric', higherIsBetter: false, prefix: '$', formatFn: val => val.toLocaleString() },
+                { key: 'quarterLap', type: 'numeric', higherIsBetter: false, suffix: ' sec' },
+                { key: 'zero60', type: 'numeric', higherIsBetter: false, suffix: ' sec' },
+                { key: 'zero100', type: 'numeric', higherIsBetter: false, suffix: ' sec' },
+                { key: 'reliability', type: 'rating', higherIsBetter: true, suffix: ' / 5' },
+                { key: 'maintenance', type: 'rating', higherIsBetter: true, suffix: ' / 5 (Score)' }, 
+                { key: 'modifiability', type: 'rating', higherIsBetter: true, suffix: ' / 5' }
+            ];
+
+            parameters.forEach(param => {
+                const cellA = document.getElementById(`cell_A_${param.key}`);
+                const cellB = document.getElementById(`cell_B_${param.key}`);
+                
+                let valA_str = '';
+                let valB_str = '';
+                let isWinnerA = false;
+                let isWinnerB = false;
+
+                if (param.type === 'numeric' || param.type === 'rating') {
+                    const rawA = carA[param.key];
+                    const rawB = carB[param.key];
+                    
+                    const displayA = param.formatFn ? param.formatFn(rawA) : rawA;
+                    const displayB = param.formatFn ? param.formatFn(rawB) : rawB;
+                    
+                    valA_str = (param.prefix || '') + displayA + (param.suffix || '');
+                    valB_str = (param.prefix || '') + displayB + (param.suffix || '');
+
+                    if (param.type === 'rating') {
+                        valA_str = generateStars(rawA) + `<span class="text-[11px] text-gray-400">${rawA}${param.suffix}</span>`;
+                        valB_str = generateStars(rawB) + `<span class="text-[11px] text-gray-400">${rawB}${param.suffix}</span>`;
+                    }
+
+                    if (rawA !== rawB && rawA !== undefined && rawB !== undefined) {
+                        if (param.higherIsBetter) {
+                            isWinnerA = rawA > rawB;
+                        } else {
+                            isWinnerA = rawA < rawB;
+                        }
+                        isWinnerB = !isWinnerA;
+                    }
+                } else if (param.type === 'custom') {
+                    valA_str = param.renderFn(carA);
+                    valB_str = param.renderFn(carB);
+                    if(carA.topSpeedUnlimited !== carB.topSpeedUnlimited) {
+                        isWinnerA = param.evalFn(carA, carB);
+                        isWinnerB = !isWinnerA;
+                    }
+                }
+
+                cellA.innerHTML = valA_str + (isWinnerA ? ' <span class="text-xs block font-bold text-emerald-400 mt-0.5">★ Winner</span>' : '');
+                cellB.innerHTML = valB_str + (isWinnerB ? ' <span class="text-xs block font-bold text-emerald-400 mt-0.5">★ Winner</span>' : '');
+
+                if (idA === idB) {
+                    applyStyle(cellA, 'neutral');
+                    applyStyle(cellB, 'neutral');
+                } else {
+                    applyStyle(cellA, isWinnerA ? 'winner' : (isWinnerB ? 'loser' : 'neutral'));
+                    applyStyle(cellB, isWinnerB ? 'winner' : (isWinnerA ? 'loser' : 'neutral'));
+                }
+            });
+        }
+
+        function applyStyle(element, state) {
+            element.classList.remove('bg-green-950/20', 'text-brand-green', 'font-bold', 'bg-red-950/20', 'text-red-400', 'text-gray-300');
+            if (state === 'winner') {
+                element.classList.add('bg-green-950/20', 'text-brand-green', 'font-bold');
+            } else if (state === 'loser') {
+                element.classList.add('bg-red-950/20', 'text-red-400');
+            } else {
+                element.classList.add('text-gray-300');
+            }
+        }
+    </script>
+</body>
+</html>
